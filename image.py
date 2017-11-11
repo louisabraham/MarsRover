@@ -33,7 +33,16 @@ def wheels(f, number=3):
         c.flatten().argsort()[-number:], (res, res))
     return list(zip(xcenters, ycenters))
 
-
+def road(f):
+    """
+    Returns the shape of the road
+    
+    Could be made faster using vectorized operations
+    """
+    res = f.shape[0]
+    magic = 146, 47, 6
+    return [min(l for l in range(res) if np.array_equal(magic, f[l, c, :3])) for c in range(res)]
+    
 if __name__ == '__main__':
     from scipy import misc
     import matplotlib.pyplot as plt
@@ -43,4 +52,5 @@ if __name__ == '__main__':
 
     plt.imshow(f, cmap='gray')
     plt.scatter(*zip(*wheels(f)), c='b', s=5)
+    plt.plot(range(f.shape[0]), road(f), c='g')
     plt.show()
