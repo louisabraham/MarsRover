@@ -1,6 +1,8 @@
 import numpy as np
 from scipy.signal import convolve2d
 
+import matplotlib.pyplot as plt
+
 
 def wheels(f, number=3):
     """
@@ -33,24 +35,28 @@ def wheels(f, number=3):
         c.flatten().argsort()[-number:], (res, res))
     return list(zip(xcenters, ycenters))
 
+
 def road(f):
     """
     Returns the shape of the road
-    
-    Could be made faster using vectorized operations
+
+    Very fast!
+    (https://stackoverflow.com/questions/47240745/extract-colored-line-from-numpy-image)
     """
-    res = f.shape[0]
     magic = 146, 47, 6
-    return [min(l for l in range(res) if np.array_equal(magic, f[l, c, :3])) for c in range(res)]
-    
-if __name__ == '__main__':
-    from scipy import misc
-    import matplotlib.pyplot as plt
+    return (f[:, :, :3] == magic).all(axis=-1).argmax(0)
 
-    image = "/Users/louisabraham/github/MarsRover/256.png"
-    f = misc.imread(image)
 
+def demo(f):
     plt.imshow(f, cmap='gray')
     plt.scatter(*zip(*wheels(f)), c='b', s=5)
     plt.plot(range(f.shape[0]), road(f), c='g')
+
+
+if __name__ == '__main__':
+    from scipy import misc
+
+    image = "/Users/louisabraham/github/MarsRover/256.png"
+    f = misc.imread(image)
+    demo(f)
     plt.show()
