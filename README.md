@@ -10,6 +10,8 @@ We use [Selenium](http://www.seleniumhq.org/) to interact with the headless WebK
 
 We use image processing to retrieve the road shape and the wheels position.
 
+![image processing](https://github.com/louisabraham/MarsRover/blob/master/screenshot.png?raw=true)
+
 References:
 
     - [Circle Detection](http://www.cs.utah.edu/~sshankar/cs6640/project5/circle.html)
