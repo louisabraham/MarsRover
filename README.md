@@ -1,6 +1,6 @@
 # Bot for the [NASA Mars Rover Game](https://mars.nasa.gov/gamee-rover/)
 
-Autonomous cars are a subject of growing interest. Here we try to pilot a 2D Mars rover :)
+Autonomous cars are a subject of growing interest. Here we try to pilot a 2D Mars Rover in **real time** :)
 
 ## Interface
 
