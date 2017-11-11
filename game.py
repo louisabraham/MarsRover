@@ -16,6 +16,9 @@ RESOLUTION = 512
 class Game():
 
     def __init__(self, res=RESOLUTION):
+        # TODO: use chromedriver with or without headless
+        # (https://intoli.com/blog/running-selenium-with-headless-chrome/)
+        
         # --disk-cache=true allows to keep a cache
         driver = webdriver.PhantomJS(service_args=['--disk-cache=true'])
         driver.set_window_size(res, res)
