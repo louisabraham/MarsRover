@@ -48,9 +48,9 @@ def road(f):
 
 
 def demo(f):
-    plt.imshow(f, cmap='gray')
+    plt.imshow(f)
     plt.scatter(*zip(*wheels(f)), c='b', s=5)
-    plt.plot(range(f.shape[0]), road(f), c='g')
+    plt.plot(*zip(*enumerate(road(f))), c='g')
 
 
 if __name__ == '__main__':
