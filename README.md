@@ -14,7 +14,7 @@ We use image processing to retrieve the road shape (green) and the wheels positi
 
 References:
 
-    - [Circle Detection](http://www.cs.utah.edu/~sshankar/cs6640/project5/circle.html)
+- [Circle Detection](http://www.cs.utah.edu/~sshankar/cs6640/project5/circle.html)
 
 ## Artificial Intelligence
 
