@@ -8,7 +8,7 @@ We use [Selenium](http://www.seleniumhq.org/) to interact with the headless WebK
 
 ## Image processing
 
-We use image processing to retrieve the road shape and the wheels position.
+We use image processing to retrieve the road shape (green) and the wheels position (blue).
 
 ![image processing](https://github.com/louisabraham/MarsRover/blob/master/screenshot.png?raw=true)
 
