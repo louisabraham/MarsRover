@@ -1,3 +1,5 @@
+from math import ceil
+
 import numpy as np
 from scipy.signal import fftconvolve
 
@@ -9,16 +11,16 @@ def wheels(f, number=3):
     Returns the coordinates of the centers
     of the wheels
 
-    It uses a convolution on the R image
-    that works empirically best
+    It uses a convolution on the R image that works
+    empirically best (because most of the picture is red)
 
-    Could be improved by expecting the resulting
-    points to be approximatively aligned and not too close
-    Also, could be made much faster by providing the previous
+    Also, could be made a bit faster by providing the previous
     positions (expectancy) and thus calculating the convolution
     on a much smaller image.
     """
+    # radius is the parameter of this function
     radius = 15
+
     mask_size = int(radius * 2.5)
     mask_center = mask_size // 2
     mask = np.array([[
@@ -28,8 +30,18 @@ def wheels(f, number=3):
     R = 255 - f[:, :, 0]
     c = fftconvolve(R.astype(int), mask.astype(int), 'same')
     ycenters, xcenters = np.unravel_index(
-        c.flatten().argsort()[-number:], f.shape[:2])
-    return list(zip(xcenters, ycenters))
+        c.flatten().argsort()[::-1], f.shape[:2])
+
+    ans = []
+    for x, y in zip(xcenters, ycenters):
+        # tests if the centers are not too close (describe the same wheel)
+        if all(abs(x - xx) + abs(y - yy) > 2 * radius for xx, yy in ans):
+            ans.append((x, y))
+    # we sort to represent the wheels from left to right
+    # if it doesn't make sense, then most certainly we are going
+    # to lose in the next seconds
+    ans.sort()
+    return ans
 
 
 def road(f):
@@ -39,8 +51,21 @@ def road(f):
     Very fast!
     (https://stackoverflow.com/questions/47240745/extract-colored-line-from-numpy-image)
     """
-    magic = 146, 47, 6
-    return (f[:, :, :3] == magic).all(axis=-1).argmax(0)
+    magic = np.array([146, 47, 6])
+    color_tolerance = 3
+
+    ans = (f[:, :, :3] == magic).all(axis=-1).argmax(axis=0).tolist()
+
+    # when we find water, the color changes
+    while 0 in ans:
+        i = ans.index(0)
+        while abs(f[ans[i - 1] - 1, i - 1, :3] - magic).max() <= color_tolerance:
+            ans[i - 1] -= 1
+        j = next(j for j in range(i, len(ans)) if ans[j])
+        for k in range(i, j):
+            ans[k] = ceil(ans[i - 1] + (ans[j] - ans[i - 1]) *
+                          (k - i + 1) / (j - i + 1))
+    return ans
 
 
 def demo(f):
