@@ -1,5 +1,5 @@
 import numpy as np
-from scipy.signal import convolve2d
+from scipy.signal import fftconvolve
 
 import matplotlib.pyplot as plt
 
@@ -12,27 +12,23 @@ def wheels(f, number=3):
     It uses a convolution on the R image
     that works empirically best
 
-    Works on the 256x256 and 512x512 images
-
     Could be improved by expecting the resulting
     points to be approximatively aligned and not too close
     Also, could be made much faster by providing the previous
     positions (expectancy) and thus calculating the convolution
     on a much smaller image.
     """
-    res = f.shape[0]
-    radius = 6 * res // 256
+    radius = 15
     mask_size = int(radius * 2.5)
     mask_center = mask_size // 2
     mask = np.array([[
         abs(((i - mask_center) ** 2 + (j - mask_center)**2)**.5 - radius) < 1
         for i in range(mask_size)]
         for j in range(mask_size)])
-
     R = 255 - f[:, :, 0]
-    c = convolve2d(R.astype(int), mask.astype(int), 'same')
+    c = fftconvolve(R.astype(int), mask.astype(int), 'same')
     ycenters, xcenters = np.unravel_index(
-        c.flatten().argsort()[-number:], (res, res))
+        c.flatten().argsort()[-number:], f.shape[:2])
     return list(zip(xcenters, ycenters))
 
 
@@ -55,8 +51,16 @@ def demo(f):
 
 if __name__ == '__main__':
     from scipy import misc
+    from time import time
 
-    image = "/Users/louisabraham/github/MarsRover/256.png"
+    image = "/tmp/mars.png"
+
     f = misc.imread(image)
+
+    d = time()
+    wheels(f)
+    road(f)
+    print('%.02f seconds' % (time() - d))
+
     demo(f)
     plt.show()
