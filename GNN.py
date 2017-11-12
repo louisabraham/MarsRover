@@ -6,14 +6,6 @@ from collections import namedtuple
 MUTATION_PARAM = 5
 
 
-def sigmoid(x):
-    return 1 / (1 + np.exp(-x))
-
-
-def threshold(x):
-    return x > 0
-
-
 class SimpleNN(namedtuple("SimpleNN", 'W, C')):
 
     def __new__(cls, *args):
@@ -28,7 +20,7 @@ class SimpleNN(namedtuple("SimpleNN", 'W, C')):
 
     def evaluate(self, inp):
         for w, c in zip(*self):
-            inp = sigmoid(np.dot(inp, w) + c)
+            inp = max(0, np.dot(inp, w) + c)
         return inp
 
     @staticmethod
