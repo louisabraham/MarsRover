@@ -20,11 +20,18 @@ def wheels(f, number=3):
     """
     # radius is the parameter of this function
     radius = 15
+    # to avoid the water where all is activated,
+    # we add negative coefficients to the mask
+    # contrast is the value of the positive ones
+    # it should be proportional to the radius
+    contrast = radius * 2 // 3
 
     mask_size = int(radius * 2.5)
     mask_center = mask_size // 2
     mask = np.array([[
+        10 if
         abs(((i - mask_center) ** 2 + (j - mask_center)**2)**.5 - radius) < 1
+        else -1
         for i in range(mask_size)]
         for j in range(mask_size)])
     R = 255 - f[:, :, 0]
