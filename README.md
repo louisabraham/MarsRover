@@ -1,10 +1,12 @@
 # Bot for the [NASA Mars Rover Game](https://mars.nasa.gov/gamee-rover/)
 
-Autonomous cars are a subject of growing interest. Here we try to pilot a 2D Mars Rover in **real time** :)
+Autonomous cars are a subject of growing interest. Here, we try to pilot a 2D Mars Rover in **real time** :)
 
 ## Interface
 
-We use [Selenium](http://www.seleniumhq.org/) to interact with the headless WebKit [PhantomJS](http://phantomjs.org/).
+We use [Selenium](http://www.seleniumhq.org/) to interact with game.
+
+We support the headless WebKit [PhantomJS](http://phantomjs.org/) and the browsers Chrome and Chromium with the headless option.
 
 ## Image processing
 
