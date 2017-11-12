@@ -10,9 +10,9 @@ We support the headless WebKit [PhantomJS](http://phantomjs.org/) and the browse
 
 ## Image processing
 
-We use image processing to retrieve the road shape (green) and the wheels position (blue).
+We use convolution to retrieve wheels position (blue) and color detection for the road shape (green).
 
-![image processing](https://github.com/louisabraham/MarsRover/blob/master/screenshot.png?raw=true)
+![image processing](https://github.com/louisabraham/MarsRover/raw/master/screenshot.png)
 
 References:
 
