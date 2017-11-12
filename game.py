@@ -42,6 +42,9 @@ class Game():
         while self.screen_hash() != magic:
             sleep(.1)
             # print(self.screen_hash())
+        
+        self.driver.switch_to_active_element().send_keys('r')
+        
 
     def screen(self, file=None):
         """
@@ -61,9 +64,6 @@ class Game():
         return hash of screen
         """
         return md5(bytes(self.screen())).digest().hex()
-
-    def start(self):
-        self.driver.switch_to_active_element().send_keys('r')
         
     def restart(self):
         self.driver.execute_script('gamee.onRestart()')
