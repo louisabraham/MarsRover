@@ -37,6 +37,8 @@ def wheels(f, number=3):
         # tests if the centers are not too close (describe the same wheel)
         if all(abs(x - xx) + abs(y - yy) > 2 * radius for xx, yy in ans):
             ans.append((x, y))
+        if len(ans) == 3:
+            break
     # we sort to represent the wheels from left to right
     # if it doesn't make sense, then most certainly we are going
     # to lose in the next seconds
@@ -56,9 +58,12 @@ def road(f):
 
     ans = (f[:, :, :3] == magic).all(axis=-1).argmax(axis=0).tolist()
 
-    # when we find water, the color changes
+    # when we find water, the color changes so
+    # we interpolate the shape of the road linearly
     while 0 in ans:
         i = ans.index(0)
+        # the last pixel before the water might be of
+        # a different color, we allow some tolerance
         while abs(f[ans[i - 1] - 1, i - 1, :3] - magic).max() <= color_tolerance:
             ans[i - 1] -= 1
         j = next(j for j in range(i, len(ans)) if ans[j])
