@@ -22,6 +22,7 @@ class Game():
                 service_args=['--disk-cache=true'])
 
         elif driver in ['chrome', 'chrome-headless', 'chromium', 'chromium-headless']:
+            # TODO: find option to use custom profile with cache
             chrome_options = ChromeOptions()
             chrome_options.add_argument("--disable-gpu")  # most important line
             chrome_options.add_argument("--disable-extensions")
