@@ -20,7 +20,7 @@ class SimpleNN(namedtuple("SimpleNN", 'W, C')):
 
     def evaluate(self, inp):
         for w, c in zip(*self):
-            inp = max(0, np.dot(inp, w) + c)
+            inp = np.maximum(0, np.dot(inp, w))
         return inp
 
     @staticmethod
