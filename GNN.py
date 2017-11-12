@@ -59,7 +59,7 @@ class controllerNN(SimpleNN):
 
     def evaluate(self, inp):
         ans = super().evaluate(inp)
-        return np.argmax(ans[:3]), np.argmax(ans[3:])
+        return np.argmax(ans[:3]) - 1, np.argmax(ans[3:]) - 1
 
 if __name__ == '__main__':
 
