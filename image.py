@@ -1,10 +1,12 @@
 from math import ceil
+from collections import namedtuple
 
 import numpy as np
 from scipy.signal import fftconvolve
 
 import matplotlib.pyplot as plt
 
+Point = namedtuple('Point', 'x y')
 
 def wheels(f, number=3):
     """
@@ -43,7 +45,7 @@ def wheels(f, number=3):
     for x, y in zip(xcenters, ycenters):
         # tests if the centers are not too close (describe the same wheel)
         if all(abs(x - xx) + abs(y - yy) > 2 * radius for xx, yy in ans):
-            ans.append((x, y))
+            ans.append(Point(x, y))
         if len(ans) == 3:
             break
     # we sort to represent the wheels from left to right
@@ -57,6 +59,9 @@ def road(f):
     """
     Returns the shape of the road
 
+    FAILS when an
+    TODO: implement closest match amongst neighbors
+    
     Very fast!
     (https://stackoverflow.com/questions/47240745/extract-colored-line-from-numpy-image)
     """
