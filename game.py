@@ -24,7 +24,7 @@ class Game():
         elif driver in ['chrome', 'chrome-headless', 'chromium', 'chromium-headless']:
             chrome_options = ChromeOptions()
             chrome_options.add_argument("--disable-gpu")  # most important line
-            chrome_options.add_argument("--disable-extensions")            
+            chrome_options.add_argument("--disable-extensions")
             if len(driver.split('-')) == 2:
                 chrome_options.add_argument("--headless")
             if driver.split('-')[0] == 'chromium':
@@ -43,7 +43,10 @@ class Game():
             sleep(.1)
             # print(self.screen_hash())
 
+        self._lastcontrols = [0, 0]
+
         self.driver.switch_to_active_element().send_keys('r')
+        self.driver.execute_script('gamee.score = 0')
 
     def screen(self, file=None):
         """
@@ -66,6 +69,7 @@ class Game():
 
     def restart(self):
         self.driver.execute_script('gamee.onRestart()')
+        self.driver.execute_script('gamee.score = 0')
 
     def pause(self):
         self.driver.execute_script('gamee.onPause()')
@@ -77,7 +81,6 @@ class Game():
         self.driver.execute_script('gamee.onResume()')
 
     def score(self):
-        'can do more accurate'
         return self.driver.execute_script('return gamee.score')
 
     def over(self):
@@ -96,3 +99,4 @@ class Game():
                   controls[updown == -1],
                   controls[updown == 1])
         self.driver.execute_script(command % params)
+        self._lastcontrols = [updown, leftright]
