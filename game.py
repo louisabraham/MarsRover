@@ -20,11 +20,11 @@ class Game():
             # --disk-cache=true allows to keep a cache
             self.driver = webdriver.PhantomJS(
                 service_args=['--disk-cache=true'])
-                
+
         elif driver in ['chrome', 'chrome-headless', 'chromium', 'chromium-headless']:
             chrome_options = ChromeOptions()
             chrome_options.add_argument("--disable-gpu")  # most important line
-            chrome_options.add_argument("--disable-extensions")
+            chrome_options.add_argument("--disable-extensions")            
             if len(driver.split('-')) == 2:
                 chrome_options.add_argument("--headless")
             if driver.split('-')[0] == 'chromium':
@@ -42,9 +42,8 @@ class Game():
         while self.screen_hash() != magic:
             sleep(.1)
             # print(self.screen_hash())
-        
+
         self.driver.switch_to_active_element().send_keys('r')
-        
 
     def screen(self, file=None):
         """
@@ -64,12 +63,15 @@ class Game():
         return hash of screen
         """
         return md5(bytes(self.screen())).digest().hex()
-        
+
     def restart(self):
         self.driver.execute_script('gamee.onRestart()')
 
     def pause(self):
         self.driver.execute_script('gamee.onPause()')
+
+    def mute(self):
+        self.driver.execute_script('gamee.onMute()')
 
     def resume(self):
         self.driver.execute_script('gamee.onResume()')
@@ -80,3 +82,17 @@ class Game():
 
     def over(self):
         return self.screen_hash() == '3f0371f975116bb1165834d64c4c67b0'
+
+    def control(self, updown, leftright):
+        controls = ['keyup', 'keydown']
+        command = """
+        gamee.controller.trigger("%s", {button : "left"});
+        gamee.controller.trigger("%s", {button : "right"});
+        gamee.controller.trigger("%s", {button : "down"});
+        gamee.controller.trigger("%s", {button : "up"});
+        """
+        params = (controls[leftright == -1],
+                  controls[leftright == 1],
+                  controls[updown == -1],
+                  controls[updown == 1])
+        self.driver.execute_script(command % params)
