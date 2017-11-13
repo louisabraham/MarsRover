@@ -55,7 +55,7 @@ if __name__ == '__main__':
     game.mute()
 
     def fit(controller):
-        return sum(execute(game, controller) for _ in range(2)) / 2
+        return np.sqrt(execute(game, controller) * execute(game, controller))
 
     def new():
         return controllerNN([16, 8, 8, 6], activation='sigmoid')
