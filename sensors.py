@@ -12,7 +12,7 @@ def slope(w):
     returns the slope of the rover
     """
     a, b, c = w
-    return (a.y - c.y) / (c.x - a.x + 1e-9)
+    return (a.y - c.y) / (c.x - a.x + 1e-4)
 
 
 def proximity(point, road, vector, activation=lambda x: exp(-x)):
