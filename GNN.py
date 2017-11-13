@@ -64,13 +64,14 @@ class SimpleNN(namedtuple("SimpleNN", 'W, C')):
 
 class controllerNN(SimpleNN):
 
-    def __init__(self, *args):
+    def __init__(self, *args, **kwargs):
         if len(args) == 1:
             layers, = args
             assert layers[-1] == 6
         else:
             W, C = args
             assert W[-1].shape[1] == 6
+        super().__init__(*args, **kwargs)
 
     def evaluate(self, inp):
         ans = super().evaluate(inp)
