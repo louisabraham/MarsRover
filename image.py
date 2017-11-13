@@ -60,64 +60,63 @@ def road(f):
     """
     Returns the shape of the road
 
-    FAILS when an
-    TODO: implement closest match amongst neighbors
-    idea: convolve (artificially and locally) the red layer with
-    [[0, 1, 0], [1, -4, 1], [0, 1, 0]] and take the heighest neighbour of value less than 10
-    or [[0, 1, 0], [0, -2, 0], [0, 1, 0]]
+
+    TODO: correct the values given by the argmax using
+    the propagation utility function
+    TODO: refactor code
 
     Very fast!
     (https://stackoverflow.com/questions/47240745/extract-colored-line-from-numpy-image)
     """
-    range_search = 2
-    color_tolerance = 10
+    range_search = 3
+    color_tolerance = 5
+    interpolation_limit = 15
     magic = np.array([146, 47, 6])
+
+    limit = f.shape[0]
 
     ans = (f[:, :, :3] == magic).all(axis=-1).argmax(axis=0).tolist()
 
-    R = f[:, :, 0]
+    # VERY IMPORTANT, or else the abs fail
+    R = f[:, :, 0].astype(int)
 
     # propagate left
     if ans[0] == 0:
-        j = next(j for j in range(len(ans)) if ans[j])
-        y = ans[j]
-        while j:
-            j -= 1
-            y = y + range_search
-            for _ in range(2 * range_search + 1):
-                y -= 1
-                if abs(2 * f[y, j, 0] - f[y+1, j, 0] - f[y-1, j, 0]) > color_tolerance:
-                    y += 1
-                    break
-            ans[j] = y
-    
+        i = next(i for i in range(len(ans)) if ans[i])
+        y = ans[i]
+        for i in reversed(range(i)):
+            ans[i] = max([y for y in
+                          range(ans[i + 1] - range_search,
+                                ans[i + 1] + range_search + 1)
+                          if abs(R[y + 1, i] - R[y, i]) <= color_tolerance
+                          and abs(R[y + 2, i] - R[y, i]) <= color_tolerance],
+                         key=lambda y: abs(R[y - 1, i] - R[y, i]),
+                         default=ans[i + 1])
+
     # propagate right
-    # TODO: interpolate linearly when gap is sufficiently small
     while 0 in ans:
-        j = ans.index(0) - 1
-        y = ans[j]
-        while j < f.shape[0] - 1 and not ans[j + 1]:
-            j += 1
-            y = y + range_search
-            for _ in range(2 * range_search + 1):
-                y -= 1
-                if abs(2 * f[y, j, 0] - f[y+1, j, 0] - f[y-1, j, 0]) > color_tolerance:
-                    y += 1
-                    break
-            ans[j] = y
-    
-    # # when we find water, the color changes so
-    # # we interpolate the shape of the road linearly
-    # while 0 in ans:
-    #     i = ans.index(0)
-    #     # the last pixel before the water might be of
-    #     # a different color, we allow some tolerance
-    #     while abs(f[ans[i - 1] - 1, i - 1, :3] - magic).max() <= color_tolerance:
-    #         ans[i - 1] -= 1
-    #     j = next(j for j in range(i, len(ans)) if ans[j])
-    #     for k in range(i, j):
-    #         ans[k] = ceil(ans[i - 1] + (ans[j] - ans[i - 1]) *
-    #                       (k - i + 1) / (j - i + 1))
+        i = ans.index(0)
+        try:
+            j = next(j for j in range(i, len(ans)) if ans[j])
+        except StopIteration:
+            j = limit
+        if j < limit and j - i < interpolation_limit:
+            # linear interpolation
+            for k in range(i, j):
+                ans[k] = ceil(ans[i - 1] + (ans[j] - ans[i - 1]) *
+                              (k - i + 1) / (j - i + 1))
+        else:
+            i -= 1
+            while i + 1 < f.shape[0] and not ans[i + 1]:
+                i += 1
+                ans[i] = max([y for y in
+                              range(ans[i - 1] - range_search,
+                                    ans[i - 1] + range_search + 1)
+                              if abs(R[y + 1, i] - R[y, i]) <= color_tolerance
+                              and abs(R[y + 2, i] - R[y, i]) <= color_tolerance],
+                             key=lambda y: abs(R[y - 1, i] - R[y, i]),
+                             default=ans[i - 1])
+
     return ans
 
 
@@ -139,6 +138,6 @@ if __name__ == '__main__':
     wheels(f)
     road(f)
     print('%.02f seconds' % (time() - d))
-
+    
     demo(f)
     plt.show()
