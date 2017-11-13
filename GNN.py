@@ -53,7 +53,7 @@ class SimpleNN(namedtuple("SimpleNN", 'W, C')):
     @staticmethod
     def aux_mutate(a, MUTATION_PARAM):
         cov = np.diag([MUTATION_PARAM] * a.size)
-        return np.reshape(rnd.multivariate_normal(a, cov), a.shape)
+        return np.reshape(rnd.multivariate_normal(a.ravel(), cov), a.shape)
 
     def mutate(a, MUTATION_PARAM=MUTATION_PARAM):
         W = [SimpleNN.aux_mutate(wa, MUTATION_PARAM)
