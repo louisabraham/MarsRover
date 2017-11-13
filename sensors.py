@@ -15,7 +15,7 @@ def slope(w):
     return (a.y - c.y) / (c.x - a.x + 1e-4)
 
 
-def proximity(point, road, vector, activation=lambda x: exp(-x)):
+def proximity(point, road, vector, activation=lambda x: exp(-x/100)):
     """
     returns an activated distance
     between the point and the road
