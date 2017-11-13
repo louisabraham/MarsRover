@@ -16,7 +16,7 @@ def inputs(game):
     img = game.screen()
     r = road(img)
     w = wheels(img)
-    return [slope(w)] + proximity_sensors(r, w, default_sensor_directions) + game._lastcontrols
+    return [w[0].x] + [slope(w)] + proximity_sensors(r, w, default_sensor_directions) + game._lastcontrols
 
 
 def execute(game, controller, timestep=0, async=True, timeout=10):
@@ -58,8 +58,8 @@ if __name__ == '__main__':
         return np.sqrt(execute(game, controller) * execute(game, controller))
 
     def new():
-        return controllerNN([16, 8, 8, 6], activation='sigmoid')
-
+        return controllerNN([17, 8, 8, 6], activation='sigmoid')
+    eval(str(best), {'array':np.array, 'controllerNN':controllerNN})
     best = new()
     while not fit(best):
         best = new()
