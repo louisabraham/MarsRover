@@ -7,9 +7,17 @@ REPRODUCTION_PARAM = 1
 MUTATION_PARAM = 0.1
 
 
+def sigmoid(x):
+    return 1 / (1 + np.exp(-x))
+
+
+def ReLU(x):
+    return np.maximum(0, x)
+
+
 class SimpleNN(namedtuple("SimpleNN", 'W, C')):
 
-    def __new__(cls, *args):
+    def __new__(cls, *args, activation='ReLU'):
         if len(args) == 1:
             layers, = args
             W = [rnd.standard_normal((i, j))
@@ -19,9 +27,12 @@ class SimpleNN(namedtuple("SimpleNN", 'W, C')):
             W, C = args
         return super().__new__(cls, W, C)
 
+    def __init__(self, *args, activation):
+        self.activation = eval(activation)
+
     def evaluate(self, inp):
         for w, c in zip(*self):
-            inp = np.maximum(0, np.dot(inp, w))
+            inp = self.activation(np.dot(inp, w))
         return inp
 
     @staticmethod
@@ -37,7 +48,7 @@ class SimpleNN(namedtuple("SimpleNN", 'W, C')):
         W = [SimpleNN.aux_reproduce(wa, wb, REPRODUCTION_PARAM)
              for wa, wb in zip(a.W, b.W)]
         C = SimpleNN.aux_reproduce(a.C, b.C, REPRODUCTION_PARAM)
-        return a.__class__(W, C)
+        return a.__class__(W, C, activation=a.activation.__name__)
 
     @staticmethod
     def aux_mutate(a, MUTATION_PARAM):
@@ -81,7 +92,7 @@ if __name__ == '__main__':
     def fit(nn):
         return -((y - nn.evaluate(X).T)**2).sum()
 
-    l = [SimpleNN([3, 4, 1]) for i in range(100)]
+    l = [SimpleNN([3, 4, 1], activation='sigmoid') for i in range(100)]
 
     for _ in range(20):
 
