@@ -18,6 +18,14 @@ References:
 
 - [Circle Detection](http://www.cs.utah.edu/~sshankar/cs6640/project5/circle.html)
 
+## Sensors
+
+From the road shape and the wheel position, we simulate some "sensors".
+
 ## Artificial Intelligence
 
-Reinforcement learning, genetic algorithm?
+TODO: Reinforcement learning?
+
+We use genetic evolved neural networks. It doesn't work very well (tested the 1+4+1 strategy over 50 generations).
+
+TODO: Distributed evaluation of the neural networks using HTTP GET servers with serialized inputs.
