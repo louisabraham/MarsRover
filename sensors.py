@@ -38,7 +38,7 @@ def proximity(point, road, vector, activation=lambda x: exp(-x)):
             return activation(road[point.x] - point.y)
         else:
             return 0
-    return hypot(c - point.x, road[c] - point.y)
+    return activation(hypot(c - point.x, road[c] - point.y))
 
 
 def proximity_sensors(road, sensors, sensor_directions):
