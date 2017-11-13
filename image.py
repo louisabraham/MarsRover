@@ -47,7 +47,7 @@ def wheels(f, number=3):
         # tests if the centers are not too close (describe the same wheel)
         if all(abs(x - xx) + abs(y - yy) > 2 * radius for xx, yy in ans):
             ans.append(Point(x, y))
-        if len(ans) == 3:
+        if len(ans) == number:
             break
     # we sort to represent the wheels from left to right
     # if it doesn't make sense, then most certainly we are going
