@@ -3,7 +3,8 @@ import numpy.random as rnd
 from collections import namedtuple
 
 
-MUTATION_PARAM = 5
+REPRODUCTION_PARAM = 1
+MUTATION_PARAM = 0.1
 
 
 class SimpleNN(namedtuple("SimpleNN", 'W, C')):
@@ -24,19 +25,30 @@ class SimpleNN(namedtuple("SimpleNN", 'W, C')):
         return inp
 
     @staticmethod
-    def aux_reproduce(a, b, MUTATION_PARAM):
+    def aux_reproduce(a, b, REPRODUCTION_PARAM):
         assert a.shape == b.shape
         shape = a.shape
         mean = (a + b).flatten() / 2
-        cov = np.diag(np.abs(a - b).flatten() * MUTATION_PARAM)
+        cov = np.diag(np.abs(a - b).flatten() * REPRODUCTION_PARAM)
         return np.reshape(rnd.multivariate_normal(mean, cov), shape)
 
-    def reproduce(a, b, MUTATION_PARAM=MUTATION_PARAM):
+    def reproduce(a, b, REPRODUCTION_PARAM=REPRODUCTION_PARAM):
         assert len(a.W) == len(b.W)
-        W = [SimpleNN.aux_reproduce(wa, wb, MUTATION_PARAM)
+        W = [SimpleNN.aux_reproduce(wa, wb, REPRODUCTION_PARAM)
              for wa, wb in zip(a.W, b.W)]
-        C = SimpleNN.aux_reproduce(a.C, b.C, MUTATION_PARAM)
-        return SimpleNN(W, C)
+        C = SimpleNN.aux_reproduce(a.C, b.C, REPRODUCTION_PARAM)
+        return a.__class__(W, C)
+
+    @staticmethod
+    def aux_mutate(a, MUTATION_PARAM):
+        cov = np.diag([MUTATION_PARAM] * a.size)
+        return np.reshape(rnd.multivariate_normal(a, cov), a.shape)
+
+    def mutate(a, MUTATION_PARAM=MUTATION_PARAM):
+        W = [SimpleNN.aux_mutate(wa, MUTATION_PARAM)
+             for wa in a.W]
+        C = SimpleNN.aux_mutate(a.C, MUTATION_PARAM)
+        return a.__class__(W, C)
 
 
 class controllerNN(SimpleNN):
