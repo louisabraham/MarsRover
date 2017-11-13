@@ -4,7 +4,7 @@ from collections import namedtuple
 
 
 REPRODUCTION_PARAM = 1
-MUTATION_PARAM = 0.1
+MUTATION_PARAM = 0.02
 
 
 def sigmoid(x):
@@ -59,7 +59,7 @@ class SimpleNN(namedtuple("SimpleNN", 'W, C')):
         W = [SimpleNN.aux_mutate(wa, MUTATION_PARAM)
              for wa in a.W]
         C = SimpleNN.aux_mutate(a.C, MUTATION_PARAM)
-        return a.__class__(W, C)
+        return a.__class__(W, C, activation=a.activation.__name__)
 
 
 class controllerNN(SimpleNN):
