@@ -33,7 +33,7 @@ class PoolManager():
                    '-c', '/bin/hostname; %s %s' % (python, script)]
         self.p = subprocess.Popen(command, stdout=subprocess.PIPE)
         self.pool = [RemoteExecutor('http://%s:5555' %
-                                    self.p.stdout.readline()) for _ in range(n)]
+                                    self.p.stdout.readline().decode()[:-2]) for _ in range(n)]
 
     @staticmethod
     def aux_map_fit(executor, controller):
