@@ -14,6 +14,7 @@ class RemoteExecutor():
 
     def __init__(self, address='http://localhost:5555'):
         self.address = address
+        urllib.request.get(self.address)
 
     def fit(self, controller):
         req = urllib.request.Request(self.address)

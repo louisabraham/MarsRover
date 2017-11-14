@@ -17,8 +17,13 @@ from executor import Executor
 class Handler(http.server.BaseHTTPRequestHandler):
 
     def do_GET(self):
+        if not 'controller' in self.headers:
+            self.executor = Executor()
+            self.send_response(200)
+            self.end_headers()
+            return
         c = loads(eval(self.headers['controller']))
-        ans = dumps(executor.fit(c))
+        ans = dumps(self.executor.fit(c))
         self.send_response(200)
         self.end_headers()
         self.wfile.write(ans)
@@ -27,8 +32,6 @@ parser = argparse.ArgumentParser(description='executor to handle fit requests')
 parser.add_argument('port', metavar='port', type=int, nargs='?',
                     default='5555', help='port (default: 5555)')
 args = parser.parse_args()
-
-executor = Executor()
 
 httpd = socketserver.TCPServer(("", args.port), Handler)
 print("serving at port", args.port)
