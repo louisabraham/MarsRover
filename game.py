@@ -7,6 +7,15 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from scipy import misc
 
+"""
+Known bugs:
+when the rover gets in a strange position and loses,
+after the restart the game restarts automatically again and it causes a timeout
+*Could* be fixed in the executor by using the distance between the wheels instead of the x value
+to determine the wheels and check if the x-difference is negative
+"""
+
+
 
 URL = "https://d29zfk7accxxr5.cloudfront.net/games/game-142/data/index.html"
 

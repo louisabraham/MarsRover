@@ -8,6 +8,13 @@ from GNN import controllerNN
 from image import road, wheels
 from sensors import slope, proximity_sensors, default_sensor_directions
 
+"""
+bugs:
+the image processing exception should be treated
+more carefully, e.g. by verifying that the game is over
+a few moments later, and if it not the case, raising (or logging) the error
+with the image
+"""
 
 def inputs(game):
     """
