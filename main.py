@@ -1,72 +1,19 @@
-from time import sleep
 from itertools import product
 
 import numpy as np
 
-from game import Game
 from GNN import controllerNN
-from image import road, wheels
-from sensors import slope, proximity_sensors, default_sensor_directions
 
-"""
-bugs:
-the image processing exception should be treated
-more carefully, e.g. by verifying that the game is over
-a few moments later, and if it not the case, raising (or logging) the error
-with the image
-"""
+from executor import Executor
 
-def inputs(game):
-    """
-    returns the list of inputs for the controller
-    """
-    img = game.screen()
-    r = road(img)
-    w = wheels(img)
-    return [w[0].x] + [slope(w)] + proximity_sensors(r, w, default_sensor_directions) + game._lastcontrols
-
-
-def execute(game, controller, timestep=0, async=True, timeout=10):
-    """
-    Tests the controller against a full run
-
-    timestep can be 0 because there is a delay
-    from the inputs collection (about 300 ms)
-
-    timeout avoids looping because of a null controller
-    """
-    game.restart()
-    while not game.over():
-        if game.score() == 0:
-            timeout -= 1
-        if not timeout:
-            return 0
-        if not async:
-            game.pause()
-        try:
-            inp = inputs(game)
-        except Exception as e:
-            # print('error', e)
-            return game.score()
-        keys = controller.evaluate(inp)
-        game.control(*keys)
-        # print('\r' + str(keys))
-        if not async:
-            game.resume()
-        sleep(timestep)
-        # print('\r' + str(game.score()), end='')
-    return game.score()
 
 if __name__ == '__main__':
-    game = Game('chrome')
-    game.mute()
 
-    def fit(controller):
-        return np.sqrt(execute(game, controller) * execute(game, controller))
+    fit = Executor('chrome').fit
 
     def new():
         return controllerNN([17, 8, 8, 6], activation='sigmoid')
-    eval(str(best), {'array':np.array, 'controllerNN':controllerNN})
+
     best = new()
     while not fit(best):
         best = new()
