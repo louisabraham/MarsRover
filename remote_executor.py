@@ -44,5 +44,5 @@ class PoolManager():
         while l:
             batch = list(zip(self.pool, l))
             with ThreadPool(len(batch)) as p:
-                ans += p.map(self.aux_map_fit, batch)
+                ans += p.starmap(self.aux_map_fit, batch)
         return ans
