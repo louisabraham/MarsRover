@@ -29,7 +29,7 @@ class Executor():
         w = wheels(img)
         return [w[0].x] + [slope(w)] + proximity_sensors(r, w, default_sensor_directions) + self.game._lastcontrols
 
-    def execute(self, controller, timestep=0, async=True, timeout=10):
+    def execute(self, controller, timestep=.1, async=True, timeout=20):
         """
         Tests the controller against a full run
 
@@ -37,6 +37,7 @@ class Executor():
         from the inputs collection (about 300 ms)
 
         timeout avoids looping because of a null controller
+        TODO: timeout in seconds!!! and timestep too!!!
         """
         self.game.restart()
         while not self.game.over():

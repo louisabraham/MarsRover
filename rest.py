@@ -9,7 +9,6 @@ import argparse
 from pickle import loads, dumps
 
 import http.server
-import socketserver
 
 from executor import Executor
 
@@ -18,12 +17,12 @@ class Handler(http.server.BaseHTTPRequestHandler):
 
     def do_GET(self):
         if not 'controller' in self.headers:
-            self.executor = Executor()
+            self.server.executor = Executor()
             self.send_response(200)
             self.end_headers()
             return
         c = loads(eval(self.headers['controller']))
-        ans = dumps(self.executor.fit(c))
+        ans = dumps(self.server.executor.fit(c))
         self.send_response(200)
         self.end_headers()
         self.wfile.write(ans)
@@ -33,6 +32,6 @@ parser.add_argument('port', metavar='port', type=int, nargs='?',
                     default='5555', help='port (default: 5555)')
 args = parser.parse_args()
 
-httpd = socketserver.TCPServer(("", args.port), Handler)
+httpd = http.server.HTTPServer(("", args.port), Handler)
 print("serving at port", args.port)
 httpd.serve_forever()
