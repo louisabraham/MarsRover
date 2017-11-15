@@ -28,4 +28,4 @@ TODO: Reinforcement learning?
 
 We use genetic evolved neural networks. It doesn't work very well (tested the 1+4+1 strategy over 50 generations).
 
-TODO: Distributed evaluation of the neural networks using HTTP GET servers with serialized inputs.
+We can increase the speed of our program by evaluating the controllers in parallel in a SLURM cluster, see `main_distributed.py`.
