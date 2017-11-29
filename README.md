@@ -24,7 +24,8 @@ From the road shape and the wheel position, we simulate some "sensors".
 
 ## Artificial Intelligence
 
-TODO: Reinforcement learning?
+TODO: Reinforcement learning? Or implement [Evolution Strategies as a
+Scalable Alternative to Reinforcement Learning](https://arxiv.org/abs/1703.03864)
 
 We use genetic evolved neural networks. It doesn't work very well (tested the 1+4+1 strategy over 50 generations).
 
