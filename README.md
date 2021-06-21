@@ -38,7 +38,7 @@ TODO: Use [SCOOP](https://scoop.readthedocs.io) instead of custom
 distributed computations. TODO: Reinforcement learning? Or implement
 [Evolution Strategies as a Scalable Alternative to Reinforcement
 Learning](https://arxiv.org/abs/1703.03864). See also
-[RLlib](https://ray.readthedocs.io/en/latest/rllib.html).
+[RLlib](https://ray.readthedocs.io/en/latest/rllib.html) and https://eng.uber.com/deep-neuroevolution/.
 
 We use genetic evolved neural networks. It doesn't work very well
 (tested the 1+4+1 strategy over 50 generations).
